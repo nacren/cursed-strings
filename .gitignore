@@ -1,0 +1,7 @@
+node_modules/
+*.log
+.DS_Store
+
+# Published evidence in bench/results/ is intentionally included in Git.
+# Use RESULTS_DIR=bench/local-results for new experiments.
+bench/local-results/

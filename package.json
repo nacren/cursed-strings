@@ -1,0 +1,36 @@
+{
+  "name": "cursed-strings",
+  "version": "0.2.0",
+  "type": "module",
+  "private": true,
+  "description": "Unicode prompt injection across six local models, and when sanitizing helps or hurts.",
+  "license": "MIT",
+  "keywords": [
+    "prompt-injection",
+    "unicode",
+    "ascii-smuggling",
+    "zero-width",
+    "homoglyph",
+    "llm-security",
+    "ollama",
+    "sanitizer"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "cursed": "bin/cursed.mjs"
+  },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node demos/show-invisible.mjs",
+    "detect": "node bin/cursed.mjs detect",
+    "clean": "node bin/cursed.mjs clean",
+    "bench": "node bench/run.mjs",
+    "probe": "node bench/probe.mjs",
+    "tokens": "node bench/tokens.mjs",
+    "think": "node bench/think.mjs",
+    "report": "node bench/report.mjs",
+    "verify:results": "node bench/verify-results.mjs"
+  }
+}
