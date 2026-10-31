@@ -6,8 +6,6 @@ A screen shows a person one thing. A language model can be fed another. This rep
 
 Everything runs locally against models you pull yourself. Payloads are harmless canaries, like a hidden instruction to reply BANANA-7731. The agent tool is a stub that only writes to a log. The moderation scenario blocks a made up word. Nothing targets anyone and nothing leaves your machine. This is defensive work. The attack and its fix live side by side.
 
-> Knowledge wants to be free. So we print it. ⛧
-
 ## What it found
 
 Six open weights models through Ollama. Ten trials per cell. Three scenarios. Full tables with every model in [bench/results/results.md](bench/results/results.md).
@@ -22,9 +20,9 @@ Six open weights models through Ollama. Ten trials per cell. Three scenarios. Fu
 
 Four things fall out of that table.
 
-**The invisible channels did not work, and not for the reason the folklore gives.** A token count probe shows the hidden code points do reach the model. A Tags payload costs about four prompt tokens per hidden character on qwen3.6. The model just cannot read those byte fragments as letters. Asked to echo a marker sent as Tags, it answered RADY284 for READ9284. Close, and wrong. See [bench/results/tokens.md](bench/results/tokens.md). With thinking on, qwen3.6 decoded the Tags payload inside its reasoning in 2 of 5 traces, called it a likely prompt injection, and ignored it every time. See [bench/results/thinking.md](bench/results/thinking.md).
+**The invisible channels did not work, and not for the reason the folklore gives.** A token count probe shows the hidden code points do reach the model. A Tags payload costs about 3.6 prompt tokens per hidden character on qwen3.6. The model just cannot read those byte fragments as letters. Asked to echo a marker sent as Tags, it answered RADY284 for READ9284. Close, and wrong. See [bench/results/tokens.md](bench/results/tokens.md). With thinking on, qwen3.6 decoded the Tags payload inside its reasoning in 2 of 5 traces, flagged it as hidden or encoded text, and ignored it every time. One filter trial is the exception: qwen3.6 worked out a Tags encoded word once in ten. See [bench/results/thinking.md](bench/results/thinking.md).
 
-**The readable tricks work.** Letter spacing with zero width characters got past a substring filter on every model while the model still read the word. Homoglyphs hijacked an agent's tool call on every trial against llama3.1:8b.
+**The readable tricks work.** Letter spacing with zero width characters got past a substring filter on every model while the model still read the word. Homoglyphs hijacked an agent's tool call on every trial against llama3.1:8b and qwen3.6.
 
 **Cleaning untrusted text can make injection worse.** The exorcist folds a homoglyph instruction back into plain text. If that cleaned text is then trusted, the model obeys it. Homoglyph summarizer injection went from 0 to 100 percent on mistral-nemo and phi4 once the text was cleaned. Sanitize at the boundary. Keep the result as data. Do both or do neither.
 
@@ -162,7 +160,7 @@ If you change a judge, `node bench/rejudge.mjs` rescores the summarizer cells fr
 
 The rule it encodes: clean untrusted text at the boundary, before it reaches the model or the filter, and never let the cleaned text back into the instruction channel.
 
-The honest cost. Step 1 flattens emoji sequences into their parts and strips the ZWNJ that Persian and some Indic words need. `sanitize(text, { keepEmoji: true })` keeps joiners that sit between two emoji, at the price of a one bit channel per emoji. There is no safe mode for ZWNJ inside words.
+The cost. Step 1 flattens emoji sequences into their parts and strips the ZWNJ that Persian and some Indic words need. `sanitize(text, { keepEmoji: true })` keeps joiners that sit between two emoji, at the price of a one bit channel per emoji. There is no safe mode for ZWNJ inside words.
 
 ## The detector
 
@@ -189,7 +187,7 @@ docs/       the writeup
 
 ## Prior art
 
-This builds on published work and credits it. Trojan Source, by Boucher and Anderson, 2021. ASCII smuggling and Unicode Tags prompt injection, Goodside and Rehberger, 2024. Variation selector smuggling, 2025. UTS #39, Unicode Security Mechanisms, for confusables and the skeleton algorithm. The new part here is measuring the channels across a set of local models, showing with token counts why the invisible ones fail there, and pairing the readable ones with a defense that is tested.
+This builds on published work and credits it. Trojan Source, by Boucher and Anderson, 2021. ASCII smuggling and Unicode Tags prompt injection, Goodside and Rehberger, 2024. Variation selector smuggling, Paul Butler, 2025. Bad Characters, by Boucher, Shumailov, Anderson and Papernot, 2022, for imperceptible attacks on language systems. UTS #39, Unicode Security Mechanisms, for confusables and the skeleton algorithm. The new part here is measuring the channels across a set of local models, showing with token counts why the invisible ones fail there, and pairing the readable ones with a defense that is tested.
 
 ## License
 
