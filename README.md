@@ -1,6 +1,6 @@
 # Cursed Strings
 
-**Unicode prompt injection across six local models, and when sanitizing helps or hurts.**
+**The Unicode tricks that actually hijack local LLMs, and when sanitizing helps or hurts.**
 
 A screen shows a person one thing. A language model can be fed another. This repo uses that gap four ways and measures how often real local models fall for each one. It also tests the exorcist sanitizer, which blocks the tested keyword filter bypasses but can make readable prompt injections more effective.
 
@@ -20,9 +20,9 @@ Six open weights models through Ollama. Ten trials per cell. Three scenarios. Fu
 
 Four things fall out of that table.
 
-**The invisible channels did not work, and not for the reason the folklore gives.** A token count probe shows the hidden code points do reach the model. A Tags payload costs about 3.6 prompt tokens per hidden character on qwen3.6. The model just cannot read those byte fragments as letters. Asked to echo a marker sent as Tags, it answered RADY284 for READ9284. Close, and wrong. See [bench/results/tokens.md](bench/results/tokens.md). With thinking on, qwen3.6 decoded the Tags payload inside its reasoning in 2 of 5 traces, flagged it as hidden or encoded text, and ignored it every time. One filter trial is the exception: qwen3.6 worked out a Tags encoded word once in ten. See [bench/results/thinking.md](bench/results/thinking.md).
+**The readable tricks work.** Letter spacing with zero width characters got past a substring filter on every model while the model still read the word. Homoglyphs made an agent send a message its user never asked for on every trial against llama3.1:8b and qwen3.6.
 
-**The readable tricks work.** Letter spacing with zero width characters got past a substring filter on every model while the model still read the word. Homoglyphs hijacked an agent's tool call on every trial against llama3.1:8b and qwen3.6.
+**The invisible channels did not work, and not for the reason the folklore gives.** A token count probe shows the hidden code points do reach the model. A Tags payload costs about 3.6 prompt tokens per hidden character on qwen3.6. The model almost never reads those byte fragments back as letters. Asked to echo a marker sent as Tags, it answered RADY284 for READ9284. Close, and wrong. See [bench/results/tokens.md](bench/results/tokens.md). With thinking on, qwen3.6 decoded the Tags payload inside its reasoning in 2 of 5 traces, flagged it as hidden or encoded text, and ignored it every time. One filter trial is the exception: qwen3.6 worked out a Tags encoded word once in ten. See [bench/results/thinking.md](bench/results/thinking.md).
 
 **Cleaning untrusted text can make injection worse.** The exorcist folds a homoglyph instruction back into plain text. If that cleaned text is then trusted, the model obeys it. Homoglyph summarizer injection went from 0 to 100 percent on mistral-nemo and phi4 once the text was cleaned. Sanitize at the boundary. Keep the result as data. Do both or do neither.
 
