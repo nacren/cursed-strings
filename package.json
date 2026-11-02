@@ -31,6 +31,7 @@
     "tokens": "node bench/tokens.mjs",
     "think": "node bench/think.mjs",
     "report": "node bench/report.mjs",
+    "report:think": "node bench/think-report.mjs",
     "verify:results": "node bench/verify-results.mjs"
   }
 }

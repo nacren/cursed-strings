@@ -19,4 +19,5 @@ jobs:
       - run: npm run demo
       - run: npm run verify:results
       - run: npm run report
-      - run: git diff --exit-code -- bench/results/results.md bench/results/results.csv
+      - run: npm run report:think
+      - run: git diff --exit-code -- bench/results/results.md bench/results/results.csv bench/results/thinking.md

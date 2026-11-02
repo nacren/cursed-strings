@@ -188,7 +188,3 @@ docs/       the writeup
 ## Prior art
 
 This builds on published work and credits it. Trojan Source, by Boucher and Anderson, 2021. ASCII smuggling and Unicode Tags prompt injection, Goodside and Rehberger, 2024. Variation selector smuggling, Paul Butler, 2025. Bad Characters, by Boucher, Shumailov, Anderson and Papernot, 2022, for imperceptible attacks on language systems. UTS #39, Unicode Security Mechanisms, for confusables and the skeleton algorithm. The new part here is measuring the channels across a set of local models, showing with token counts why the invisible ones fail there, and pairing the readable ones with a defense that is tested.
-
-## License
-
-MIT. See LICENSE.
