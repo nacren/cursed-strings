@@ -4,7 +4,6 @@
   "type": "module",
   "private": true,
   "description": "Unicode prompt injection across six local models, and when sanitizing helps or hurts.",
-  "license": "MIT",
   "keywords": [
     "prompt-injection",
     "unicode",
